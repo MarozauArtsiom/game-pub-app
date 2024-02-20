@@ -13,9 +13,9 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const GameCard = ({ game, onDelete, isLoading }) => {
+const GameCard = ({ game, onDelete, isLoading, onClick }) => {
   return (
-    <Card sx={{ position: "relative" }}>
+    <Card sx={{ position: "relative" }} onClick={() => onClick?.(game.id)}>
       <CardActionArea disabled={isLoading}>
         <CardMedia
           component="img"
@@ -83,6 +83,7 @@ GameCard.propTypes = {
   }).isRequired,
   onDelete: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired,
+  onClick: PropTypes.func,
 };
 
 export default GameCard;

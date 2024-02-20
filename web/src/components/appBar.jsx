@@ -28,6 +28,7 @@ const NavigationBar = () => {
         <Button color="inherit" component={Link} to="/add-game">
           Add Game
         </Button>
+        <Button color="inherit" component={Link} to="/scores">Scores</Button>
       </Toolbar>
     </AppBar>
   );

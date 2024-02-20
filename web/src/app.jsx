@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 // pages
 import MainPage from "./pages/mainPage";
 import AddGamePage from "./pages/addGamePage";
+import ScoreTablePage from './pages/scoreTablePage';
 
 const App = () => {
   return (
@@ -10,6 +11,7 @@ const App = () => {
       <AppBar />
       <Routes>
         <Route path="/add-game" element={<AddGamePage />} />
+        <Route path="/scores" element={<ScoreTablePage />} />
         <Route path="/" element={<MainPage />} />
         <Route path="*" element={<div>Page Not Found</div>} />
       </Routes>
