@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchGames, addGame, deleteGame } from "../../features/gameSlice";
+import GameCard from "../../components/gameCard";
 import {
   TextField,
   Button,
@@ -8,12 +9,9 @@ import {
   Paper,
   Typography,
   CircularProgress,
-  Card,
-  CardActions,
-  CardContent,
-  IconButton,
+  Grid,
+  Container,
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
 
 const AddGamePage = () => {
   const dispatch = useDispatch();
@@ -27,10 +25,8 @@ const AddGamePage = () => {
   const [deletingGames, setDeletingGames] = useState(new Set());
 
   useEffect(() => {
-    if (status === "idle") {
-      dispatch(fetchGames());
-    }
-  }, [status, dispatch]);
+    dispatch(fetchGames());
+  }, [dispatch]);
 
   const handleChange = (e) => {
     setNewGame({ ...newGame, [e.target.name]: e.target.value });
@@ -38,7 +34,9 @@ const AddGamePage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(addGame(newGame));
+    dispatch(addGame(newGame)).then(() => {
+      dispatch(fetchGames()); // Reload games after adding a new one
+    });
     setNewGame({ name: "", description: "", imageUrl: "", gameUrl: "" });
   };
 
@@ -50,22 +48,15 @@ const AddGamePage = () => {
         newSet.delete(gameId);
         return newSet;
       });
+      dispatch(fetchGames()); // Reload games after deletion
     });
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        p: 2,
-      }}
-    >
+    <Container sx={{ mt: 4 }}>
       <Paper sx={{ p: 2, mb: 2, maxWidth: 500, width: "100%" }}>
         <Typography variant="h6">Add New Game</Typography>
         <form onSubmit={handleSubmit}>
-          {/* Form Fields */}
           <TextField
             label="Game Name"
             name="name"
@@ -110,45 +101,41 @@ const AddGamePage = () => {
         </form>
       </Paper>
 
-      {games.map((game) => (
-        <Card key={game.id} sx={{ maxWidth: 345, mb: 2, position: "relative" }}>
-          <CardContent>
-            <Typography variant="h5" component="div">
-              {game.name}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {game.description}
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <IconButton
-              onClick={() => handleDelete(game.id)}
-              aria-label="delete game"
-              disabled={deletingGames.has(game.id)}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </CardActions>
-          {deletingGames.has(game.id) && (
-            <Box
-              sx={{
-                position: "absolute",
-                top: 0,
-                right: 0,
-                bottom: 0,
-                left: 0,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundColor: "rgba(255, 255, 255, 0.7)",
-              }}
-            >
-              <CircularProgress />
-            </Box>
-          )}
-        </Card>
-      ))}
-    </Box>
+      <Typography variant="h4" sx={{ mb: 2 }}>
+        Games List
+      </Typography>
+      {status === "loading" && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            my: 4,
+          }}
+        >
+          <CircularProgress />
+          <Typography sx={{ ml: 2 }}>loading...</Typography>
+        </Box>
+      )}
+
+      {status === "succeeded" && games.length === 0 && (
+        <Typography variant="subtitle1">No games available.</Typography>
+      )}
+
+      {status !== "loading" && (
+        <Grid container spacing={2}>
+          {games.map((game) => (
+            <Grid item xs={12} sm={6} md={4} key={game.id}>
+              <GameCard
+                game={game}
+                onDelete={handleDelete}
+                isLoading={deletingGames.has(game.id)}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      )}
+    </Container>
   );
 };
 

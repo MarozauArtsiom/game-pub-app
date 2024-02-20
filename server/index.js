@@ -4,12 +4,14 @@ const fs = require('fs');
 
 const games = [
   {
+    id: 1,
     name: 'Game 1', 
     description: 'Description for Game 1',
     imageUrl: '/static/game1.webp',
     author: 'Author 1'
   },
   {
+    id: 2,
     name: 'Game 2', 
     description: 'Description for Game 2',
     imageUrl: '/static/game2.webp',
@@ -31,7 +33,9 @@ const server = http.createServer((req, res) => {
     });
   } else {
     res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify(games));
+    setTimeout(() => {
+      res.end(JSON.stringify(games));
+    }, 3000);
   }
 });
 
