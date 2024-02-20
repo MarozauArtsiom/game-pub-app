@@ -1,0 +1,20 @@
+import AppBar from "./components/appBar";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+// pages
+import MainPage from "./pages/mainPage";
+import AddGamePage from "./pages/addGamePage";
+
+const App = () => {
+  return (
+    <Router>
+      <AppBar />
+      <Routes>
+        <Route path="/add-game" element={<AddGamePage />} />
+        <Route path="/" element={<MainPage />} />
+        <Route path="*" element={<div>Page Not Found</div>} />
+      </Routes>
+    </Router>
+  );
+};
+
+export default App;
