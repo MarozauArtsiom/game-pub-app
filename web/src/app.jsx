@@ -4,12 +4,14 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import MainPage from "./pages/mainPage";
 import AddGamePage from "./pages/addGamePage";
 import ScoreTablePage from './pages/scoreTablePage';
+import GameApprovalsPage from './pages/gameApprovalsPage';
 
 const App = () => {
   return (
     <Router>
       <AppBar />
       <Routes>
+        <Route path="/game-approvals" element={<GameApprovalsPage />} />
         <Route path="/add-game" element={<AddGamePage />} />
         <Route path="/scores" element={<ScoreTablePage />} />
         <Route path="/" element={<MainPage />} />

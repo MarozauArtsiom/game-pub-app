@@ -10,10 +10,19 @@ import {
   IconButton,
   CircularProgress,
   Box,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const GameCard = ({ game, onDelete, isLoading, onClick }) => {
+const GameCard = ({
+  game,
+  onDelete,
+  isLoading,
+  onClick,
+  onApprove,
+  isApproving,
+}) => {
   return (
     <Card sx={{ position: "relative" }} onClick={() => onClick?.(game.id)}>
       <CardActionArea disabled={isLoading}>
@@ -35,23 +44,25 @@ const GameCard = ({ game, onDelete, isLoading, onClick }) => {
           </Typography>
         </CardContent>
       </CardActionArea>
-      <IconButton
-        sx={{
-          position: "absolute",
-          top: 10,
-          right: 10,
-          backgroundColor: "white", // Adding a white background
-          padding: "5px", // Padding around the icon
-          borderRadius: "50%", // Circular background
-          "&:hover": {
-            backgroundColor: "rgba(255, 255, 255, 0.8)", // Slightly transparent on hover
-          },
-        }}
-        onClick={() => onDelete(game.id)}
-        disabled={isLoading}
-      >
-        <DeleteIcon />
-      </IconButton>
+      {onDelete && (
+        <IconButton
+          sx={{
+            position: "absolute",
+            top: 10,
+            right: 10,
+            backgroundColor: "white", // Adding a white background
+            padding: "5px", // Padding around the icon
+            borderRadius: "50%", // Circular background
+            "&:hover": {
+              backgroundColor: "rgba(255, 255, 255, 0.8)", // Slightly transparent on hover
+            },
+          }}
+          onClick={() => onDelete(game.id)}
+          disabled={isLoading}
+        >
+          <DeleteIcon />
+        </IconButton>
+      )}
       {isLoading && (
         <Box
           sx={{
@@ -69,6 +80,33 @@ const GameCard = ({ game, onDelete, isLoading, onClick }) => {
           <CircularProgress />
         </Box>
       )}
+      {onApprove && (
+        <Box sx={{ position: "relative", mt: 2 }}>
+          <Select
+            value={game.approval?.status || "idle"}
+            onChange={(e) => onApprove(e.target.value)}
+            displayEmpty
+            fullWidth
+            disabled={isApproving}
+          >
+            <MenuItem value="idle">Idle</MenuItem>
+            <MenuItem value="yes">Approve</MenuItem>
+            <MenuItem value="no">Reject</MenuItem>
+          </Select>
+          {isApproving && (
+            <CircularProgress
+              size={24}
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                marginTop: "-12px",
+                marginLeft: "-12px",
+              }}
+            />
+          )}
+        </Box>
+      )}
     </Card>
   );
 };
@@ -79,11 +117,16 @@ GameCard.propTypes = {
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     imageUrl: PropTypes.string.isRequired,
-    author: PropTypes.string.isRequired, // Assuming 'author' is a required string
+    author: PropTypes.string.isRequired,
+    approval: PropTypes.shape({
+      status: PropTypes.string.isRequired,
+    }),
   }).isRequired,
   onDelete: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired,
+  isApproving: PropTypes.bool,
   onClick: PropTypes.func,
+  onApprove: PropTypes.func,
 };
 
 export default GameCard;
