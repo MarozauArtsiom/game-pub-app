@@ -38,6 +38,17 @@ const ScoreTablePage = () => {
     dispatch(fetchScores(gameId));
   };
 
+  // need to optimize render and only then make updates
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     if (selectedGameId) {
+  //       dispatch(fetchScores(selectedGameId));
+  //     }
+  //   }, 1000);
+
+  //   return () => clearInterval(intervalId); // Clear interval on component unmount
+  // }, [dispatch, selectedGameId]);
+
   const filteredGames = games.filter((game) =>
     game.name.toLowerCase().includes(filter.toLowerCase())
   );
