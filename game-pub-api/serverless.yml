@@ -1,0 +1,84 @@
+service: game-pub-api
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  environment:
+    PG_HOST: ${env:PG_HOST}
+    PG_DATABASE: ${env:PG_DATABASE}
+    PG_USERNAME: ${env:PG_USERNAME}
+    PG_PASSWORD: ${env:PG_PASSWORD}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - rds:*
+      Resource: '*'
+
+functions:
+  api:
+    handler: index.handler
+    events:
+      - httpApi: '*'
+
+resources:
+  Resources:
+    GamePubDBSubnetGroup:
+      Type: 'AWS::RDS::DBSubnetGroup'
+      Properties:
+        DBSubnetGroupDescription: 'Subnet Group for Game Pub API'
+        SubnetIds:
+          - Ref: GamePubDBSubnetA
+          - Ref: GamePubDBSubnetB
+
+    GamePubDBSubnetA:
+      Type: 'AWS::EC2::Subnet'
+      Properties:
+        VpcId:
+          Ref: GamePubDBVPC
+        CidrBlock: '10.0.1.0/24'
+        AvailabilityZone:
+          Fn::Select:
+            - '0'
+            - Fn::GetAZs: ''
+
+    GamePubDBSubnetB:
+      Type: 'AWS::EC2::Subnet'
+      Properties:
+        VpcId:
+          Ref: GamePubDBVPC
+        CidrBlock: '10.0.2.0/24'
+        AvailabilityZone:
+          Fn::Select:
+            - '1'
+            - Fn::GetAZs: ''
+
+    GamePubDBVPC:
+      Type: 'AWS::EC2::VPC'
+      Properties:
+        CidrBlock: '10.0.0.0/16'
+        EnableDnsSupport: true
+        EnableDnsHostnames: true
+
+    GamePubDBSecurityGroup:
+      Type: 'AWS::EC2::SecurityGroup'
+      Properties:
+        GroupDescription: 'Security Group for Game Pub API DB'
+        VpcId:
+          Ref: GamePubDBVPC
+
+    GamePubRDSInstance:
+      Type: 'AWS::RDS::DBInstance'
+      Properties:
+        DBName: 'gamepubdb'
+        AllocatedStorage: '20'
+        DBInstanceClass: 'db.t2.micro'
+        Engine: 'postgres'
+        MasterUsername: 'admin'
+        MasterUserPassword: 'your_secure_password'
+        DBSubnetGroupName:
+          Ref: GamePubDBSubnetGroup
+        VpcSecurityGroups:
+          - Ref: GamePubDBSecurityGroup
+        PubliclyAccessible: false
