@@ -2,20 +2,20 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 export const fetchGames = createAsyncThunk("games/fetchGames", async () => {
-  const response = await axios.get("api/games");
+  const response = await axios.get("/api/games");
   return response.data;
 });
 
 // Async thunk for adding a game
 export const addGame = createAsyncThunk("games/addGame", async (gameData) => {
-  const response = await axios.put("/api/games", gameData);
+  const response = await axios.post("/api/games", gameData);
   return response.data;
 });
 
 export const approveGame = createAsyncThunk(
   "games/approveGame",
   async ({ gameId, status }) => {
-    await axios.patch(`/api/games/${gameId}`, { approval: status });
+    await axios.post(`/api/games/${gameId}`, { approval: status });
     return { id: gameId, approval: { status } };
   }
 );

@@ -20,7 +20,7 @@ const AddGamePage = () => {
     name: "",
     description: "",
     imageUrl: "",
-    gameUrl: "",
+    author: "",
   });
   const [deletingGames, setDeletingGames] = useState(new Set());
 
@@ -37,7 +37,7 @@ const AddGamePage = () => {
     dispatch(addGame(newGame)).then(() => {
       dispatch(fetchGames()); // Reload games after adding a new one
     });
-    setNewGame({ name: "", description: "", imageUrl: "", gameUrl: "" });
+    setNewGame({ name: "", description: "", imageUrl: "", author: "" });
   };
 
   const handleDelete = (gameId) => {
@@ -82,9 +82,9 @@ const AddGamePage = () => {
             margin="normal"
           />
           <TextField
-            label="Game URL"
-            name="gameUrl"
-            value={newGame.gameUrl}
+            label="Author"
+            name="author"
+            value={newGame.author}
             onChange={handleChange}
             fullWidth
             margin="normal"

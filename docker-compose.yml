@@ -3,6 +3,7 @@ version: '3.3'
 volumes:
   server_node_modules:
   fe_static:
+  postgresql_data:
 
 services:
   server:
@@ -14,10 +15,15 @@ services:
     volumes:
       - ./server:/server
       - server_node_modules:/server/node_modules
+    links:
+      - postgresql
+    env_file: .env
     expose:
       - "3001"
     environment:
       - PORT=3001
+    depends_on:
+      - postgresql
 
   fe-build:
     container_name: fe-build
@@ -27,3 +33,13 @@ services:
       dockerfile: Dockerfile_fe_build
     volumes:
       - fe_static:/build_app/dist
+
+  postgresql:
+    container_name: postgresql
+    restart: always
+    image: centos/postgresql-96-centos7
+    env_file: ./.env
+    volumes:
+      - postgresql_data:/var/lib/pgsql/data
+    expose:
+      - "5432"
