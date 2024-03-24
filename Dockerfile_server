@@ -4,5 +4,4 @@ COPY ./server/package*.json ./
 RUN npm i
 COPY ./server ./
 
-EXPOSE ${PORT}
 CMD npm start

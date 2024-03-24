@@ -2,7 +2,7 @@ version: '3.3'
 
 volumes:
   server_node_modules:
-  fe_static:
+  web_data:
   postgresql_data:
 
 services:
@@ -18,21 +18,22 @@ services:
     links:
       - postgresql
     env_file: .env
-    expose:
-      - "3001"
-    environment:
-      - PORT=3001
+    ports:
+      - 3001:3001
     depends_on:
       - postgresql
 
-  fe-build:
-    container_name: fe-build
-    restart: "no"
+  web:
+    container_name: web
+    restart: always
     build:
       context: .
-      dockerfile: Dockerfile_fe_build
+      dockerfile: Dockerfile_web
     volumes:
-      - fe_static:/build_app/dist
+      - ./web_data:/web
+      - web_data:/web/node_modules
+    ports:
+      - 5173:5173
 
   postgresql:
     container_name: postgresql
@@ -41,5 +42,5 @@ services:
     env_file: ./.env
     volumes:
       - postgresql_data:/var/lib/pgsql/data
-    expose:
-      - "5432"
+    ports:
+      - 5432:5432
