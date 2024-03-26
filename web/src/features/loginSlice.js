@@ -9,8 +9,8 @@ export const fetchLogin = createAsyncThunk("login/fetchLogin", async (code) => {
 export const loginSlice = createSlice({
   name: "login",
   initialState: {
-    data: [],
-    isLoggedIn: false,
+    data: JSON.parse(sessionStorage.userData) || {},
+    isLoggedIn: JSON.parse(sessionStorage.isLoggedIn) || false,
     clientId: import.meta.env.VITE_APP_CLIENT_ID,
     redirectUri: import.meta.env.VITE_APP_REDIRECT_URI,
     error: null,
@@ -26,6 +26,8 @@ export const loginSlice = createSlice({
         state.status = "succeeded";
         state.isLoggedIn = true;
         state.data = action.payload;
+        sessionStorage.setItem("userData", JSON.stringify(action.payload));
+        sessionStorage.setItem("isLoggedIn", JSON.stringify(true));
       })
       .addCase(fetchLogin.rejected, (state, action) => {
         state.status = "failed";

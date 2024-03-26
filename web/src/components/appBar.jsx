@@ -9,7 +9,7 @@ const NavigationBar = () => {
   const { data, isLoggedIn } = useSelector((state) => state.login);
 
   const { avatar_url: avatarUrl } = data
-
+console.log('data', {data,isLoggedIn})
   return (
     <AppBar position="static">
       <Toolbar style={{flexGrow: 0}}>
