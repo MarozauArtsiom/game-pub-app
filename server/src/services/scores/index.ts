@@ -1,6 +1,7 @@
 import { Score } from '../../entities/score';
+import { Repository } from '../../data-access/interface';
 
-interface ScoreRepository {
+interface ScoreRepository extends Repository<Score, any> {
   find(): Promise<Score[]>
   findOne(query: object): Promise<Score>
   save(payload: object): Promise<Score>

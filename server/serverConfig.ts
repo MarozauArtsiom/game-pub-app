@@ -5,7 +5,14 @@ const serverConfig = {
 
   routes: {
     games: '/games',
-    scores: '/scores'
+    scores: '/scores',
+    authenticate: '/authenticate'
+  },
+
+  token: {
+    clientId: process.env.SERVER_CLIENT_ID,
+    clientSecret: process.env.SERVER_CLIENT_SECRET,
+    redirectUri: process.env.SERVER_REDIRECT_URI
   },
 
   dbSource: new DataSource({

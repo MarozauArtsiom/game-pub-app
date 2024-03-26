@@ -1,6 +1,7 @@
 import { Game } from '../../entities/game';
+import { Repository } from '../../data-access/interface';
 
-interface GameRepository {
+interface GameRepository extends Repository<Game, any> {
   find(): Promise<Game[]>
   findOne(query: object): Promise<Game>
   save(payload: object): Promise<Game>

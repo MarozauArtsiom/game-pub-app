@@ -6,6 +6,7 @@ import MainPage from "./pages/mainPage";
 import AddGamePage from "./pages/addGamePage";
 import ScoreTablePage from './pages/scoreTablePage';
 import GameApprovalsPage from './pages/gameApprovalsPage';
+import LoginPage from "./pages/login";
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
         <Route path="/game-approvals" element={<GameApprovalsPage />} />
         <Route path="/add-game" element={<AddGamePage />} />
         <Route path="/scores" element={<ScoreTablePage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={<MainPage />} />
         <Route path="*" element={<div>Page Not Found</div>} />
       </Routes>

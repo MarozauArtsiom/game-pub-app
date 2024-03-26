@@ -32,6 +32,7 @@ services:
     volumes:
       - ./web_data:/web
       - web_data:/web/node_modules
+    env_file: ./.env
     ports:
       - 5173:5173
 
