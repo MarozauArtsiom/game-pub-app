@@ -1,0 +1,47 @@
+version: '3.3'
+
+volumes:
+  server_node_modules:
+  web_data:
+  postgresql_data:
+
+services:
+  server:
+    container_name: server
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile_server
+    volumes:
+      - ./server:/server
+      - server_node_modules:/server/node_modules
+    links:
+      - postgresql
+    env_file: .env
+    ports:
+      - 3001:3001
+    depends_on:
+      - postgresql
+
+  web:
+    container_name: web
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile_web
+    volumes:
+      - ./web_data:/web
+      - web_data:/web/node_modules
+    env_file: ./.env
+    ports:
+      - 5173:5173
+
+  postgresql:
+    container_name: postgresql
+    restart: always
+    image: centos/postgresql-96-centos7
+    env_file: ./.env
+    volumes:
+      - postgresql_data:/var/lib/pgsql/data
+    ports:
+      - 5432:5432
