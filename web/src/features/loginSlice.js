@@ -9,8 +9,8 @@ export const fetchLogin = createAsyncThunk("login/fetchLogin", async (code) => {
 export const loginSlice = createSlice({
   name: "login",
   initialState: {
-    data: JSON.parse(sessionStorage.userData) || {},
-    isLoggedIn: JSON.parse(sessionStorage.isLoggedIn) || false,
+    data: sessionStorage.userData ? JSON.parse(sessionStorage.userData) : {},
+    isLoggedIn: sessionStorage.isLoggedIn ? JSON.parse(sessionStorage.isLoggedIn) : false,
     clientId: import.meta.env.VITE_APP_CLIENT_ID,
     redirectUri: import.meta.env.VITE_APP_REDIRECT_URI,
     error: null,
